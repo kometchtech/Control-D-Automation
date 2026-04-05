@@ -36,11 +36,6 @@ UPSTREAM_API_URL = (
 # Remove any files you don't want to track; add new filenames as hagezi
 # publishes them.  Must match the keys in FILE_MAPPINGS in controld_api_push.py.
 TARGET_FILES: List[str] = [
-    "apple-private-relay-allow-folder.json",
-    "meta-tracker-allow-folder.json",
-    "microsoft-allow-folder.json",
-    "native-tracker-apple-folder.json",
-    "native-tracker-microsoft-folder.json",
     "spam-tlds-folder.json",
 ]
 

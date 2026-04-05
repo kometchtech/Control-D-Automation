@@ -1,4 +1,4 @@
-# 🚀 controld-hagezi-sync
+# 🚀 Control D x Hagezi-Sync
 
 Automatically syncs DNS blocklist folders from [hagezi/dns-blocklists](https://github.com/hagezi/dns-blocklists) into your [Control D](https://controld.com) account via the Control D API.
 

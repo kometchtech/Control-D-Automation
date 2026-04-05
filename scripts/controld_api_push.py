@@ -63,14 +63,6 @@ CONTROLD_DIR = "controld"
 #   at the top, then expand the folder list on the left to find folder names.
 #   Names are case-sensitive and must match exactly.
 #
-# Available upstream files (as of the last README update):
-#   apple-private-relay-allow-folder.json
-#   meta-tracker-allow-folder.json
-#   microsoft-allow-folder.json
-#   native-tracker-apple-folder.json
-#   native-tracker-microsoft-folder.json
-#   spam-tlds-folder.json
-#
 # Remove any entry you don't want to push; add entries for new files as needed.
 # Processing order matters: within a single profile, domains claimed by an
 # earlier entry are excluded from later entries (cross-folder deduplication).

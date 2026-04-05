@@ -76,7 +76,7 @@ CONTROLD_DIR = "controld"
 # Put allow-folders before block-folders to ensure allow takes priority.
 
 FILE_MAPPINGS: Dict[str, List[Tuple[str, str]]] = {
-    "apple-private-relay-allow-folder.json": [
+    "spam-idns-folder.json": [
         ("ichikawa setting", "hagezi/dns-blocklists"),   # ← change to your profile/folder names
     ],
 }

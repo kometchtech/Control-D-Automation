@@ -278,7 +278,9 @@ def sync_folder(
             actually_added = to_add
             log.info(f"  Added {len(actually_added)} domains to '{folder_name}'")
         except requests.HTTPError as exc:
-            log.error(f"  Failed to add hostnames to '{folder_name}': {exc.response.status_code} {exc.response.text}")
+            # Log only the status code — response body may contain internal API
+            # details that should not be persisted in CI logs.
+            log.error(f"  Failed to add hostnames to '{folder_name}': HTTP {exc.response.status_code}")
             success = False
         except Exception as exc:
             log.error(f"  Unexpected error adding to '{folder_name}': {exc}")
@@ -459,7 +461,13 @@ def send_email(email_body: str) -> None:
     Supports implicit TLS (port 465) and STARTTLS (port 587).
     """
     server    = os.environ.get("EMAIL_SERVER",   "").strip()
-    port      = int(os.environ.get("EMAIL_PORT", "587").strip())
+    try:
+        port = int(os.environ.get("EMAIL_PORT", "587").strip())
+        if not (0 < port <= 65535):
+            raise ValueError(f"port {port} is outside the valid range 1–65535")
+    except (ValueError, TypeError) as exc:
+        log.error(f"Invalid EMAIL_PORT: {exc} — skipping email")
+        return
     username  = os.environ.get("EMAIL_USERNAME", "").strip()
     password  = os.environ.get("EMAIL_PASSWORD", "").strip()
     from_addr = os.environ.get("EMAIL_FROM",     "").strip()

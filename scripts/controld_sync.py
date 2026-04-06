@@ -16,8 +16,10 @@ import time
 import shutil
 import subprocess
 import difflib
+import base64
 from pathlib import Path
 from typing import List, Tuple, Optional
+from urllib.parse import urlparse
 
 import requests
 
@@ -66,9 +68,31 @@ class ControldSync:
             ["git", "commit", "-m", "Sync controld folder from upstream"],
             check=True,
         )
-        remote_url = f"https://x-access-token:{github_token}@github.com/{repo_name}.git"
-        subprocess.run(["git", "push", remote_url, "main"], check=True)
-        print("Changes pushed to repository")
+        # Inject the token via http.extraheader stored in local git config so it
+        # never appears in process arguments (visible via /proc/<pid>/cmdline).
+        # This mirrors the technique used by actions/checkout itself.
+        auth = base64.b64encode(f"x-access-token:{github_token}".encode()).decode()
+        subprocess.run(
+            [
+                "git", "config", "--local",
+                "http.https://github.com/.extraheader",
+                f"AUTHORIZATION: basic {auth}",
+            ],
+            check=True,
+        )
+        try:
+            remote_url = f"https://github.com/{repo_name}.git"
+            subprocess.run(["git", "push", remote_url, "main"], check=True)
+            print("Changes pushed to repository")
+        finally:
+            # Always scrub the credential from local config, even on push failure.
+            subprocess.run(
+                [
+                    "git", "config", "--local", "--unset",
+                    "http.https://github.com/.extraheader",
+                ],
+                check=False,
+            )
 
     # ── Temp dir helpers ──────────────────────────────────────────────────────
 
@@ -104,6 +128,17 @@ class ControldSync:
                     url = upstream_files.get(filename)
                     if not url:
                         raise ValueError(f"File not found in upstream: {filename}")
+                    # Validate the download URL before fetching to prevent SSRF
+                    # in case the GitHub API response is tampered with.
+                    parsed = urlparse(url)
+                    if parsed.scheme not in ("http", "https"):
+                        raise ValueError(
+                            f"Unexpected URL scheme for '{filename}': {parsed.scheme!r}"
+                        )
+                    if not parsed.netloc.endswith("githubusercontent.com"):
+                        raise ValueError(
+                            f"Unexpected URL host for '{filename}': {parsed.netloc!r}"
+                        )
                     file_response = requests.get(url, timeout=30)
                     file_response.raise_for_status()
                     (TEMP_DIR / filename).write_bytes(file_response.content)

@@ -69,17 +69,30 @@ class ControldSync:
             check=True,
         )
         # Inject the token via http.extraheader stored in local git config so it
-        # never appears in process arguments (visible via /proc/<pid>/cmdline).
+        # never appears in process arguments for the push (visible via /proc/<pid>/cmdline).
         # This mirrors the technique used by actions/checkout itself.
+        # The git config call does receive the token in its argv, but capture_output=True
+        # keeps it off stdout/stderr, and the CalledProcessError handler below ensures a
+        # failure raises a sanitised RuntimeError (not the raw CalledProcessError whose
+        # .cmd would contain the base64-encoded token).
         auth = base64.b64encode(f"x-access-token:{github_token}".encode()).decode()
-        subprocess.run(
-            [
-                "git", "config", "--local",
-                "http.https://github.com/.extraheader",
-                f"AUTHORIZATION: basic {auth}",
-            ],
-            check=True,
-        )
+        try:
+            subprocess.run(
+                [
+                    "git", "config", "--local",
+                    "http.https://github.com/.extraheader",
+                    f"AUTHORIZATION: basic {auth}",
+                ],
+                check=True,
+                capture_output=True,  # prevent git noise; also keeps args out of default output
+            )
+        except subprocess.CalledProcessError as exc:
+            # Re-raise without the original exception so the CalledProcessError
+            # (whose .cmd includes the base64-encoded token) is never printed to
+            # workflow logs.  The raw exit code is still surfaced for diagnosis.
+            raise RuntimeError(
+                f"Failed to set git credential header (exit {exc.returncode})"
+            ) from None
         try:
             remote_url = f"https://github.com/{repo_name}.git"
             subprocess.run(["git", "push", remote_url, "main"], check=True)

@@ -69,25 +69,12 @@ CONTROLD_DIR = "controld"
 # Put allow-folders before block-folders to ensure allow takes priority.
 
 FILE_MAPPINGS: Dict[str, List[Tuple[str, str]]] = {
-    "apple-private-relay-allow-folder.json": [
-        ("My Profile", "Apple Private Relay Block"),   # ← change to your profile/folder names
-    ],
-    "meta-tracker-allow-folder.json": [
-        ("My Profile", "Meta Tracker Block"),
-    ],
-    "native-tracker-apple-folder.json": [
-        ("My Profile", "Apple Tracker"),
-    ],
-    "native-tracker-microsoft-folder.json": [
-        ("My Profile 2", "Microsoft Tracker"),
-    ],
-    "microsoft-allow-folder.json": [
-        ("My Profile 2", "Microsoft Tracker Allow"),
-    ],
     # spam-tlds synced to two profiles simultaneously:
+    "spam-idns-folder.json": [
+        ("ichikawa setting",   "hagezi-dns-blocklists"),
+    ],
     "spam-tlds-folder.json": [
-        ("My Profile",   "Blocked TLDs"),
-        ("My Profile 2", "Blocked TLDs"),
+        ("ichikawa setting",   "hagezi-dns-blocklists"),
     ],
 }
 

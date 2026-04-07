@@ -35,7 +35,7 @@ UPSTREAM_API_URL = (
 # publishes them.  Must match the keys in FILE_MAPPINGS in controld_api_push.py.
 TARGET_FILES: List[str] = [
     "spam-tlds-folder.json",
-    "hagezi-dns-blocklists",
+    "spam-idns-folder.json",
 ]
 
 # ── Internal constants ────────────────────────────────────────────────────────

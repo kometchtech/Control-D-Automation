@@ -34,7 +34,6 @@ UPSTREAM_API_URL = (
 # Remove any files you don't want to track; add new filenames as hagezi
 # publishes them.  Must match the keys in FILE_MAPPINGS in controld_api_push.py.
 TARGET_FILES: List[str] = [
-    "spam-tlds-folder.json",
     "spam-idns-folder.json",
 ]
 

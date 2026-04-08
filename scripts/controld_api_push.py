@@ -73,9 +73,6 @@ FILE_MAPPINGS: Dict[str, List[Tuple[str, str]]] = {
     "spam-idns-folder.json": [
         ("ichikawa setting",   "hagezi-dns-blocklists"),
     ],
-    "spam-tlds-folder.json": [
-        ("ichikawa setting",   "hagezi-dns-blocklists"),
-    ],
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -86,7 +83,7 @@ BASE_URL           = "https://api.controld.com"
 PAGE_SIZE          = 500    # max hostnames per POST /rules batch request
 REQUEST_DELAY      = 0.5    # seconds between API calls (rate-limit headroom)
 DELETE_DELAY       = 0.25   # seconds between individual DELETE calls
-MAX_DELETE_PERCENT = 100     # abort if removals exceed this % of the live folder size
+MAX_DELETE_PERCENT = 50     # abort if removals exceed this % of the live folder size
 
 
 # ── API helpers ───────────────────────────────────────────────────────────────

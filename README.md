@@ -2,7 +2,7 @@
 
 Automatically syncs DNS blocklist folders from [hagezi/dns-blocklists](https://github.com/hagezi/dns-blocklists) into your [Control D](https://controld.com) account via the Control D API.
 
-Runs on a GitHub Actions schedule — no server required.
+Runs on a GitHub Actions schedule.
 
 ---
 

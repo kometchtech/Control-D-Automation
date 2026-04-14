@@ -3,8 +3,8 @@ name: Sync Control D folders from upstream
 # ── Schedule ───────────────────────────────────────────────────────────────────
 # Runs twice daily.  Can also be triggered manually from the Actions tab.
 on:
-#  schedule:
-#    - cron: '0 5  * * *'   # 05:00 UTC daily
+  schedule:
+    - cron: '0 5  * * 1'   # 05:00 UT daily
 #    - cron: '0 17 * * *'   # 17:00 UTC daily
   workflow_dispatch:
 

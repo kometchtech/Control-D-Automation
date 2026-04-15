@@ -71,7 +71,8 @@ CONTROLD_DIR = "controld"
 FILE_MAPPINGS: Dict[str, List[Tuple[str, str]]] = {
     # spam-tlds synced to two profiles simultaneously:
     "spam-idns-folder.json": [
-        ("ichikawa setting",   "hagezi-dns-blocklists"),
+        ("ichikawa config", "hagezi-dns-blocklists"),
+        ("nagano config", "hagezi-dns-blocklists"),
     ],
 }
 
